@@ -12,4 +12,16 @@
     <ProjectReference Include="..\E-Commerce.Domain\E-Commerce.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="SeedData\*.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.28">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.28" />
+  </ItemGroup>
+
 </Project>
