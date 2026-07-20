@@ -1,7 +1,3 @@
 namespace E_Commerce.Application.DTOs;
 
-public class BrandDto
-{
-    public int Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-}
+public record BrandDto(int Id, string Name);

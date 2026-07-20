@@ -2,8 +2,8 @@ using E_Commerce.Domain.Entities;
 
 namespace E_Commerce.Domain.Contracts;
 
-public interface IUnitOfWork : IAsyncDisposable
+public interface IUnitOfWork
 {
-    IGenericRepository<TEntity> Repository<TEntity>() where TEntity : BaseEntity;
-    Task<int> CompleteAsync();
+    IGenericRepository<TEntity, TKey> GetRepository<TEntity, TKey>() where TEntity : BaseEntity<TKey>;
+    Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

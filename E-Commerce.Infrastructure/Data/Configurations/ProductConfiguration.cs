@@ -11,14 +11,8 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder.Property(product => product.Name).HasMaxLength(100).IsRequired();
         builder.Property(product => product.Description).HasMaxLength(500).IsRequired();
         builder.Property(product => product.PictureUrl).HasMaxLength(200).IsRequired();
-        builder.Property(product => product.Price).HasColumnType("decimal(18,2)");
-
-        builder.HasOne(product => product.Brand)
-            .WithMany()
-            .HasForeignKey(product => product.BrandId);
-
-        builder.HasOne(product => product.Type)
-            .WithMany()
-            .HasForeignKey(product => product.TypeId);
+        builder.Property(product => product.Price).HasPrecision(18, 2);
+        builder.HasOne(product => product.Brand).WithMany(brand => brand.Products).HasForeignKey(product => product.BrandId);
+        builder.HasOne(product => product.Type).WithMany(type => type.Products).HasForeignKey(product => product.TypeId);
     }
 }

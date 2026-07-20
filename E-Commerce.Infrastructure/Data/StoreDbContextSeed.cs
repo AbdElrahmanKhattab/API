@@ -9,38 +9,29 @@ public static class StoreDbContextSeed
     public static async Task SeedAsync(StoreDbContext context)
     {
         await context.Database.EnsureCreatedAsync();
-
-        var basePath = AppContext.BaseDirectory;
+        var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+        var seedPath = Path.Combine(AppContext.BaseDirectory, "SeedData");
 
         if (!await context.ProductBrands.AnyAsync())
         {
-            var brands = await ReadSeedFileAsync<List<ProductBrand>>(basePath, "brands.json");
-            await context.ProductBrands.AddRangeAsync(brands);
+            var brands = await ReadAsync<List<ProductBrand>>(Path.Combine(seedPath, "brands.json"), options);
+            if (brands is not null) await context.ProductBrands.AddRangeAsync(brands);
         }
-
         if (!await context.ProductTypes.AnyAsync())
         {
-            var types = await ReadSeedFileAsync<List<ProductType>>(basePath, "types.json");
-            await context.ProductTypes.AddRangeAsync(types);
+            var types = await ReadAsync<List<ProductType>>(Path.Combine(seedPath, "types.json"), options);
+            if (types is not null) await context.ProductTypes.AddRangeAsync(types);
         }
+        await context.SaveChangesAsync();
 
         if (!await context.Products.AnyAsync())
         {
-            var products = await ReadSeedFileAsync<List<Product>>(basePath, "products.json");
-            await context.Products.AddRangeAsync(products);
+            var products = await ReadAsync<List<Product>>(Path.Combine(seedPath, "products.json"), options);
+            if (products is not null) await context.Products.AddRangeAsync(products);
+            await context.SaveChangesAsync();
         }
-
-        await context.SaveChangesAsync();
     }
 
-    private static async Task<T> ReadSeedFileAsync<T>(string basePath, string fileName)
-    {
-        var filePath = Path.Combine(basePath, "SeedData", fileName);
-        var json = await File.ReadAllTextAsync(filePath);
-
-        return JsonSerializer.Deserialize<T>(json, new JsonSerializerOptions
-        {
-            PropertyNameCaseInsensitive = true
-        })!;
-    }
+    private static async Task<T?> ReadAsync<T>(string path, JsonSerializerOptions options) =>
+        JsonSerializer.Deserialize<T>(await File.ReadAllTextAsync(path), options);
 }

@@ -5,42 +5,28 @@ namespace E_Commerce.Application.Specifications;
 
 public class ProductsWithTypesAndBrandsSpecification : BaseSpecification<Product>
 {
-    public ProductsWithTypesAndBrandsSpecification(ProductSpecParams specParams)
+    public ProductsWithTypesAndBrandsSpecification(ProductSpecParams parameters)
         : base(product =>
-            (!specParams.BrandId.HasValue || product.BrandId == specParams.BrandId.Value)
-            && (!specParams.TypeId.HasValue || product.TypeId == specParams.TypeId.Value)
-            && (string.IsNullOrWhiteSpace(specParams.Search) || product.Name.ToLower().Contains(specParams.Search)))
+            (!parameters.BrandId.HasValue || product.BrandId == parameters.BrandId) &&
+            (!parameters.TypeId.HasValue || product.TypeId == parameters.TypeId) &&
+            (string.IsNullOrWhiteSpace(parameters.Search) || product.Name.ToLower().Contains(parameters.Search.Trim().ToLower())))
     {
         AddInclude(product => product.Brand);
         AddInclude(product => product.Type);
-
-        ApplySorting(specParams.Sort);
-        ApplyPaging((specParams.PageIndex - 1) * specParams.PageSize, specParams.PageSize);
-    }
-
-    public ProductsWithTypesAndBrandsSpecification(int id)
-        : base(product => product.Id == id)
-    {
-        AddInclude(product => product.Brand);
-        AddInclude(product => product.Type);
-    }
-
-    private void ApplySorting(string? sort)
-    {
-        switch (sort)
+        ApplyPaging((parameters.PageIndex - 1) * parameters.PageSize, parameters.PageSize);
+        switch (parameters.Sort?.ToLower())
         {
-            case "priceasc":
-                AddOrderBy(product => (double)product.Price);
-                break;
-            case "pricedesc":
-                AddOrderByDesc(product => (double)product.Price);
-                break;
-            case "namedesc":
-                AddOrderByDesc(product => product.Name);
-                break;
-            default:
-                AddOrderBy(product => product.Name);
-                break;
+            // SQLite cannot order decimal columns directly; casting keeps the database query server-side.
+            case "priceasc": AddOrderBy(product => (double)product.Price); break;
+            case "pricedesc": AddOrderByDescending(product => (double)product.Price); break;
+            case "namedesc": AddOrderByDescending(product => product.Name); break;
+            default: AddOrderBy(product => product.Name); break;
         }
+    }
+
+    public ProductsWithTypesAndBrandsSpecification(int id) : base(product => product.Id == id)
+    {
+        AddInclude(product => product.Brand);
+        AddInclude(product => product.Type);
     }
 }

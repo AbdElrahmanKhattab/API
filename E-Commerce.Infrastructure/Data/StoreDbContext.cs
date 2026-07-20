@@ -3,13 +3,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace E_Commerce.Infrastructure.Data;
 
-public class StoreDbContext : DbContext
+public class StoreDbContext(DbContextOptions<StoreDbContext> options) : DbContext(options)
 {
-    public StoreDbContext(DbContextOptions<StoreDbContext> options)
-        : base(options)
-    {
-    }
-
     public DbSet<Product> Products => Set<Product>();
     public DbSet<ProductBrand> ProductBrands => Set<ProductBrand>();
     public DbSet<ProductType> ProductTypes => Set<ProductType>();

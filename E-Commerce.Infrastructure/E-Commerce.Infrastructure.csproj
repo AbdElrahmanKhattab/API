@@ -8,20 +8,20 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.28">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.28" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\E-Commerce.Application\E-Commerce.Application.csproj" />
     <ProjectReference Include="..\E-Commerce.Domain\E-Commerce.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="SeedData\*.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Update="SeedData\*.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.28">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.28" />
   </ItemGroup>
 
 </Project>

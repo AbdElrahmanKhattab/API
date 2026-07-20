@@ -5,22 +5,12 @@ using Microsoft.Extensions.Configuration;
 
 namespace E_Commerce.Application.Mapping;
 
-public class PictureUrlResolver : IValueResolver<Product, ProductDto, string>
+public class PictureUrlResolver(IConfiguration configuration) : IValueResolver<Product, ProductDto, string>
 {
-    private readonly IConfiguration _configuration;
-
-    public PictureUrlResolver(IConfiguration configuration)
-    {
-        _configuration = configuration;
-    }
-
     public string Resolve(Product source, ProductDto destination, string destMember, ResolutionContext context)
     {
-        if (string.IsNullOrWhiteSpace(source.PictureUrl))
-        {
-            return string.Empty;
-        }
-
-        return $"{_configuration["ApiBaseUrl"]}/{source.PictureUrl}";
+        if (string.IsNullOrWhiteSpace(source.PictureUrl)) return string.Empty;
+        var baseUrl = configuration["ApiBaseUrl"]?.TrimEnd('/');
+        return string.IsNullOrWhiteSpace(baseUrl) ? source.PictureUrl : $"{baseUrl}/{source.PictureUrl.TrimStart('/')}";
     }
 }

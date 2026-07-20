@@ -6,42 +6,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace E_Commerce.Infrastructure.Repositories;
 
-public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : BaseEntity
+public class GenericRepository<TEntity, TKey>(StoreDbContext dbContext) : IGenericRepository<TEntity, TKey> where TEntity : BaseEntity<TKey>
 {
-    private readonly StoreDbContext _context;
-
-    public GenericRepository(StoreDbContext context)
-    {
-        _context = context;
-    }
-
-    public async Task<IReadOnlyList<TEntity>> GetAllAsync()
-    {
-        return await _context.Set<TEntity>().ToListAsync();
-    }
-
-    public async Task<TEntity?> GetByIdAsync(int id)
-    {
-        return await _context.Set<TEntity>().FindAsync(id);
-    }
-
-    public async Task<IReadOnlyList<TEntity>> GetAllWithSpecAsync(ISpecification<TEntity> spec)
-    {
-        return await ApplySpecification(spec).ToListAsync();
-    }
-
-    public async Task<TEntity?> GetEntityWithSpecAsync(ISpecification<TEntity> spec)
-    {
-        return await ApplySpecification(spec).FirstOrDefaultAsync();
-    }
-
-    public async Task<int> CountAsync(ISpecification<TEntity> spec)
-    {
-        return await ApplySpecification(spec).CountAsync();
-    }
-
-    private IQueryable<TEntity> ApplySpecification(ISpecification<TEntity> spec)
-    {
-        return SpecificationEvaluator<TEntity>.GetQuery(_context.Set<TEntity>().AsQueryable(), spec);
-    }
+    public async Task<TEntity?> GetByIdAsync(TKey id) => await dbContext.Set<TEntity>().FindAsync(id);
+    public async Task<IEnumerable<TEntity>> GetAllAsync() => await dbContext.Set<TEntity>().ToListAsync();
+    public async Task<TEntity?> GetEntityWithSpecAsync(ISpecification<TEntity> specification) => await ApplySpecification(specification).FirstOrDefaultAsync();
+    public async Task<IEnumerable<TEntity>> GetAllWithSpecAsync(ISpecification<TEntity> specification) => await ApplySpecification(specification).ToListAsync();
+    public async Task<int> CountAsync(ISpecification<TEntity> specification) => await ApplySpecification(specification).CountAsync();
+    public void Add(TEntity entity) => dbContext.Set<TEntity>().Add(entity);
+    public void Update(TEntity entity) => dbContext.Set<TEntity>().Update(entity);
+    public void Delete(TEntity entity) => dbContext.Set<TEntity>().Remove(entity);
+    private IQueryable<TEntity> ApplySpecification(ISpecification<TEntity> specification) => SpecificationEvaluator<TEntity>.GetQuery(dbContext.Set<TEntity>().AsQueryable(), specification);
 }
