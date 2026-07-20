@@ -1,0 +1,24 @@
+@E_Commerce_API_HostAddress = https://localhost:7283
+
+GET {{E_Commerce_API_HostAddress}}/api/products
+Accept: application/json
+
+###
+
+GET {{E_Commerce_API_HostAddress}}/api/products?brandId=2&typeId=3&sort=pricedesc&pageIndex=1&pageSize=6
+Accept: application/json
+
+###
+
+GET {{E_Commerce_API_HostAddress}}/api/products?search=jacket&sort=pricedesc&pageSize=2
+Accept: application/json
+
+###
+
+GET {{E_Commerce_API_HostAddress}}/api/products/brands
+Accept: application/json
+
+###
+
+GET {{E_Commerce_API_HostAddress}}/api/products/types
+Accept: application/json
