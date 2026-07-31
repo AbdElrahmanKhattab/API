@@ -1,21 +1,39 @@
+using System.Collections;
 using E_Commerce.Domain.Contracts;
 using E_Commerce.Domain.Entities;
 using E_Commerce.Infrastructure.Data;
 
 namespace E_Commerce.Infrastructure.Repositories;
 
-public class UnitOfWork(StoreDbContext dbContext) : IUnitOfWork
+public class UnitOfWork : IUnitOfWork
 {
-    private readonly Dictionary<string, object> repositories = [];
+    private readonly StoreDbContext _context;
+    private readonly Hashtable _repositories = new();
 
-    public IGenericRepository<TEntity, TKey> GetRepository<TEntity, TKey>() where TEntity : BaseEntity<TKey>
+    public UnitOfWork(StoreDbContext context)
     {
-        var typeName = typeof(TEntity).Name;
-        if (repositories.TryGetValue(typeName, out var repository)) return (IGenericRepository<TEntity, TKey>)repository;
-        var newRepository = new GenericRepository<TEntity, TKey>(dbContext);
-        repositories[typeName] = newRepository;
-        return newRepository;
+        _context = context;
     }
 
-    public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) => dbContext.SaveChangesAsync(cancellationToken);
+    public IGenericRepository<TEntity> Repository<TEntity>() where TEntity : BaseEntity
+    {
+        var type = typeof(TEntity).Name;
+
+        if (!_repositories.ContainsKey(type))
+        {
+            _repositories.Add(type, new GenericRepository<TEntity>(_context));
+        }
+
+        return (IGenericRepository<TEntity>)_repositories[type]!;
+    }
+
+    public Task<int> CompleteAsync()
+    {
+        return _context.SaveChangesAsync();
+    }
+
+    public ValueTask DisposeAsync()
+    {
+        return _context.DisposeAsync();
+    }
 }

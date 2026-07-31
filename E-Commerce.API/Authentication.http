@@ -1,0 +1,22 @@
+@E_Commerce_API_HostAddress = https://localhost:7283
+@token = paste-token-here
+
+POST {{E_Commerce_API_HostAddress}}/api/authentication/login
+Content-Type: application/json
+
+{
+  "email": "customer@test.com",
+  "password": "P@ssw0rd"
+}
+
+###
+
+GET {{E_Commerce_API_HostAddress}}/api/authentication/currentuser
+Authorization: Bearer {{token}}
+Accept: application/json
+
+###
+
+GET {{E_Commerce_API_HostAddress}}/api/authentication/address
+Authorization: Bearer {{token}}
+Accept: application/json

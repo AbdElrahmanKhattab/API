@@ -1,19 +1,14 @@
-@host = https://localhost:7283
+@E_Commerce_API_HostAddress = https://localhost:7283
 
-### Get first page of products
-GET {{host}}/api/products
+GET {{E_Commerce_API_HostAddress}}/api/products
 Accept: application/json
 
-### Filter, search, sort and page products
-GET {{host}}/api/products?brandId=2&typeId=3&search=jacket&sort=pricedesc&pageIndex=1&pageSize=6
+###
+
+GET {{E_Commerce_API_HostAddress}}/api/products?search=jacket&sort=pricedesc&pageSize=2
 Accept: application/json
 
-### Get product by id
-GET {{host}}/api/products/1
+###
+
+GET {{E_Commerce_API_HostAddress}}/api/products/brands
 Accept: application/json
-
-### Get brands
-GET {{host}}/api/products/brands
-
-### Get types
-GET {{host}}/api/products/types

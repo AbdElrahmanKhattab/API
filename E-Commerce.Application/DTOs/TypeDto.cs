@@ -1,3 +1,7 @@
 namespace E_Commerce.Application.DTOs;
 
-public record TypeDto(int Id, string Name);
+public class TypeDto
+{
+    public int Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+}

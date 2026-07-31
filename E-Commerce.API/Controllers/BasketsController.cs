@@ -26,7 +26,6 @@ public class BasketsController : ControllerBase
     public async Task<ActionResult<CustomerBasket>> CreateOrUpdateBasket(CustomerBasket basket)
     {
         var createdBasket = await _basketService.CreateOrUpdateBasketAsync(basket);
-
         return createdBasket is null ? BadRequest() : Ok(createdBasket);
     }
 
@@ -34,7 +33,6 @@ public class BasketsController : ControllerBase
     public async Task<IActionResult> DeleteBasket(string id)
     {
         var deleted = await _basketService.DeleteBasketAsync(id);
-
         return deleted ? Ok(true) : BadRequest();
     }
 }

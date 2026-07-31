@@ -3,13 +3,13 @@ using E_Commerce.Domain.Specifications;
 
 namespace E_Commerce.Domain.Contracts;
 
-public interface IGenericRepository<TEntity, TKey> where TEntity : BaseEntity<TKey>
+public interface IGenericRepository<TEntity> where TEntity : BaseEntity
 {
-    Task<TEntity?> GetByIdAsync(TKey id);
-    Task<IEnumerable<TEntity>> GetAllAsync();
-    Task<TEntity?> GetEntityWithSpecAsync(ISpecification<TEntity> specification);
-    Task<IEnumerable<TEntity>> GetAllWithSpecAsync(ISpecification<TEntity> specification);
-    Task<int> CountAsync(ISpecification<TEntity> specification);
+    Task<IReadOnlyList<TEntity>> GetAllAsync();
+    Task<TEntity?> GetByIdAsync(int id);
+    Task<IReadOnlyList<TEntity>> GetAllWithSpecAsync(ISpecification<TEntity> spec);
+    Task<TEntity?> GetEntityWithSpecAsync(ISpecification<TEntity> spec);
+    Task<int> CountAsync(ISpecification<TEntity> spec);
     void Add(TEntity entity);
     void Update(TEntity entity);
     void Delete(TEntity entity);

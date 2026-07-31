@@ -1,10 +1,5 @@
 @E_Commerce_API_HostAddress = https://localhost:7283
 
-GET {{E_Commerce_API_HostAddress}}/api/baskets?id=basket1
-Accept: application/json
-
-###
-
 POST {{E_Commerce_API_HostAddress}}/api/baskets
 Content-Type: application/json
 
@@ -23,5 +18,5 @@ Content-Type: application/json
 
 ###
 
-DELETE {{E_Commerce_API_HostAddress}}/api/baskets/basket1
+GET {{E_Commerce_API_HostAddress}}/api/baskets?id=basket1
 Accept: application/json

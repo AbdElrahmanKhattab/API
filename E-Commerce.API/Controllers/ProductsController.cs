@@ -1,4 +1,4 @@
-using E_Commerce.Application.DTOs;
+using E_Commerce.API.Filters;
 using E_Commerce.Application.Services;
 using E_Commerce.Application.Specifications;
 using Microsoft.AspNetCore.Mvc;
@@ -7,24 +7,44 @@ namespace E_Commerce.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ProductsController(IProductService productService) : ControllerBase
+public class ProductsController : ControllerBase
 {
-    [HttpGet]
-    [ProducesResponseType(typeof(Pagination<ProductDto>), StatusCodes.Status200OK)]
-    public async Task<ActionResult<Pagination<ProductDto>>> GetProducts([FromQuery] ProductSpecParams parameters) => Ok(await productService.GetProductsAsync(parameters));
+    private readonly IProductService _productService;
 
-    [HttpGet("{id:int}")]
-    [ProducesResponseType(typeof(ProductDto), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<ProductDto>> GetProduct(int id)
+    public ProductsController(IProductService productService)
     {
-        var product = await productService.GetProductByIdAsync(id);
+        _productService = productService;
+    }
+
+    [Cached(60)]
+    [HttpGet]
+    public async Task<IActionResult> GetProducts([FromQuery] ProductSpecParams specParams)
+    {
+        var products = await _productService.GetProductsAsync(specParams);
+        return Ok(products);
+    }
+
+    [Cached(60)]
+    [HttpGet("{id:int}")]
+    public async Task<IActionResult> GetProduct(int id)
+    {
+        var product = await _productService.GetProductByIdAsync(id);
         return product is null ? NotFound() : Ok(product);
     }
 
+    [Cached(120)]
     [HttpGet("brands")]
-    public async Task<ActionResult<IEnumerable<BrandDto>>> GetBrands() => Ok(await productService.GetAllBrandsAsync());
+    public async Task<IActionResult> GetBrands()
+    {
+        var brands = await _productService.GetBrandsAsync();
+        return Ok(brands);
+    }
 
+    [Cached(120)]
     [HttpGet("types")]
-    public async Task<ActionResult<IEnumerable<TypeDto>>> GetTypes() => Ok(await productService.GetAllTypesAsync());
+    public async Task<IActionResult> GetTypes()
+    {
+        var types = await _productService.GetTypesAsync();
+        return Ok(types);
+    }
 }

@@ -18,10 +18,7 @@ public class BasketRepository : IBasketRepository
     public async Task<CustomerBasket?> GetBasketAsync(string basketId)
     {
         var basketJson = await _cache.GetStringAsync(basketId);
-
-        return string.IsNullOrWhiteSpace(basketJson)
-            ? null
-            : JsonSerializer.Deserialize<CustomerBasket>(basketJson);
+        return string.IsNullOrWhiteSpace(basketJson) ? null : JsonSerializer.Deserialize<CustomerBasket>(basketJson);
     }
 
     public async Task<CustomerBasket?> CreateOrUpdateBasketAsync(CustomerBasket basket, TimeSpan? timeToLive = null)
@@ -33,7 +30,6 @@ public class BasketRepository : IBasketRepository
         };
 
         await _cache.SetStringAsync(basket.Id, basketJson, options);
-
         return await GetBasketAsync(basket.Id);
     }
 
