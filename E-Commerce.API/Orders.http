@@ -1,0 +1,29 @@
+@E_Commerce_API_HostAddress = https://localhost:7283
+@token = paste-token-here
+
+GET {{E_Commerce_API_HostAddress}}/api/orders/deliveryMethods
+Accept: application/json
+
+###
+
+POST {{E_Commerce_API_HostAddress}}/api/orders
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "basketId": "basket1",
+  "deliveryMethodId": 1,
+  "shippingAddress": {
+    "firstName": "Default",
+    "lastName": "Customer",
+    "street": "Route Academy Street",
+    "city": "Cairo",
+    "country": "Egypt"
+  }
+}
+
+###
+
+GET {{E_Commerce_API_HostAddress}}/api/orders
+Authorization: Bearer {{token}}
+Accept: application/json
