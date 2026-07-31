@@ -1,0 +1,27 @@
+@E_Commerce_API_HostAddress = https://localhost:7283
+
+GET {{E_Commerce_API_HostAddress}}/api/baskets?id=basket1
+Accept: application/json
+
+###
+
+POST {{E_Commerce_API_HostAddress}}/api/baskets
+Content-Type: application/json
+
+{
+  "id": "basket1",
+  "items": [
+    {
+      "id": 7,
+      "name": "Men's Leather Jacket",
+      "pictureUrl": "images/products/MensLeatherJacket.jpg",
+      "price": 1200,
+      "quantity": 1
+    }
+  ]
+}
+
+###
+
+DELETE {{E_Commerce_API_HostAddress}}/api/baskets/basket1
+Accept: application/json
